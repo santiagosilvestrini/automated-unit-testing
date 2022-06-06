@@ -1,0 +1,32 @@
+name: tests
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+    paths:
+    - '.github/workflows/tests.yml'
+    - 'code/*'
+    - 'tests/testthat/*'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+    - '.github/workflows/tests.yml'
+    - 'code/*'
+    - 'tests/testthat/*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Instalar dependencias
+        run: Rscript -e "install.packages(c('testthat', 'here'))"
+      - name: Run tests
+        run: Rscript -e "source('tests/testthat.R')"
